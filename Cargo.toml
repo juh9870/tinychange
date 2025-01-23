@@ -1,0 +1,22 @@
+[package]
+name = "tinychange"
+version = "0.1.0"
+authors = ["juh9870 <github.com/juh9870>"]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "A tool for creating tiny changelogs on a fly!"
+repository = "https://github.com/juh9870/tinychange"
+readme = "README.md"
+
+[dependencies]
+clap = { version = "4.5.27", features = ["derive"] }
+fake = "3.0.1"
+fs-err = "3.1.0"
+gix = "0.70.0"
+inquire = "0.7.5"
+miette = { version = "7.4.0", features = ["fancy", "derive"] }
+rand = { version = "0.8.5", default-features = false, features = ["small_rng"] }
+sanitise-file-name = "1.0.0"
+serde = { version = "1.0.217", features = ["derive"] }
+thiserror = "2.0.11"
+toml = "0.8.19"
