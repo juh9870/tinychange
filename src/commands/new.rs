@@ -46,7 +46,12 @@ impl NewArgs {
         let message = if let Some(message) = self.message {
             message
         } else if opts.interactive() {
-            inquire::Text::new("What is the message for this change?")
+            let prompt = if kind.ends_with("ed") {
+                format!("What got {}?", kind.to_lowercase())
+            } else {
+                "Describe the change".to_string()
+            };
+            inquire::Text::new(&prompt)
                 .prompt()
                 .into_diagnostic()?
         } else {
