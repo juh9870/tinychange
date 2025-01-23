@@ -1744,6 +1744,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "normalize-line-endings"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "61807f77802ff30975e01f4f071c8ba10c022052f98b3294119f3e615d13e5be"
+
+[[package]]
 name = "object"
 version = "0.36.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2187,7 +2193,9 @@ dependencies = [
  "gix",
  "inquire",
  "miette",
+ "normalize-line-endings",
  "rand",
+ "regex",
  "sanitise-file-name",
  "serde",
  "thiserror 2.0.11",

@@ -1,7 +1,8 @@
 use crate::config::CommandOpts;
 use miette::{bail, miette};
-use std::hash;
+use std::fmt::Display;
 use std::hash::{Hash, Hasher};
+use std::{fmt, hash};
 
 #[derive(Debug, Clone, Hash)]
 pub struct TinyChange {
@@ -22,6 +23,10 @@ impl TinyChange {
             "{}.md",
             opts.naming().generate(hash, opts.max_filename_length())?
         ))
+    }
+
+    pub fn as_markdown(&self) -> MarkdownChange {
+        MarkdownChange(self)
     }
 
     pub fn serialize(&self) -> String {
@@ -66,7 +71,9 @@ impl TinyChange {
         if lines.next() != Some("---") {
             bail!("Invalid format: missing message separator")
         }
-        let message = lines.collect::<Vec<_>>().join("\n").trim().to_owned();
+        let message: String =
+            normalize_line_endings::normalized(lines.collect::<Vec<_>>().join("\n").trim().chars())
+                .collect();
 
         if author.is_empty() {
             bail!("Empty author field")
@@ -89,5 +96,25 @@ impl TinyChange {
             message,
             author,
         })
+    }
+}
+
+pub struct MarkdownChange<'a>(&'a TinyChange);
+
+impl Display for MarkdownChange<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+        if !self.0.message.contains("\n") {
+            write!(f, "- {} (by {})", self.0.message, self.0.author)?;
+        } else {
+            let msg = self
+                .0
+                .message
+                .lines()
+                .map(|line| format!("  {}", line))
+                .collect::<Vec<_>>()
+                .join("\n");
+            write!(f, "- {}\n  By: {}", msg, self.0.author)?;
+        }
+        Ok(())
     }
 }
