@@ -24,6 +24,7 @@ in mkShell.override {
     pkgs.cargo-insta
     pkgs.cargo-audit
     pkgs.cargo-expand
+    pkgs.cargo-release
     pkgs.simple-http-server
     pkgs.pre-commit
   ];

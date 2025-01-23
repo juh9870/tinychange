@@ -22,3 +22,17 @@ sanitise-file-name = "1.0.0"
 serde = { version = "1.0.217", features = ["derive"] }
 thiserror = "2.0.11"
 toml = "0.8.19"
+
+[profile.release]
+opt-level = 3
+codegen-units = 1
+lto = true
+strip = true
+
+# Enable a small amount of optimization in debug mode
+[profile.dev]
+opt-level = 1
+
+# Enable high optimizations for dependencies, but not for our code:
+[profile.dev.package."*"]
+opt-level = 3
