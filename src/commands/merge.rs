@@ -5,31 +5,64 @@ use miette::{bail, Context, IntoDiagnostic};
 use regex::{Regex, RegexBuilder};
 use std::borrow::Cow;
 use std::ops::Range;
-use std::path::PathBuf;
 
 #[derive(Debug, Default, Clone, Args)]
-pub struct MergeArgs {}
+pub struct MergeArgs {
+    #[arg(short, long)]
+    keep: bool,
+}
 
 fn regex_for_section(section: &str) -> Regex {
-    RegexBuilder::new(&format!(r"^#+\s*\[?\s*{}\s*]?$", section))
+    RegexBuilder::new(&format!(r"^#+\s*\[?\s*{}\s*]?[^\n]*$", section))
         .case_insensitive(true)
         .build()
         .unwrap()
 }
 impl MergeArgs {
     pub fn run(self, opts: CommandOpts) -> miette::Result<()> {
-        let to_delete = if !opts.changelog_file().exists() {
+        let mut all_changes = vec![];
+        let mut to_delete = vec![];
+
+        for file in fs_err::read_dir(opts.tinychanges_dir()).into_diagnostic()? {
+            let file = file.into_diagnostic()?;
+            if file.path().is_dir() {
+                bail!(
+                    "Unexpected directory found in tinychanges directory: {:?}",
+                    file.path()
+                );
+            }
+
+            if file.path().extension() != Some("md".as_ref()) {
+                continue;
+            }
+
+            let content = fs_err::read_to_string(file.path()).into_diagnostic()?;
+            let change = TinyChange::deserialize(&opts, content).with_context(|| {
+                format!(
+                    "Failed to deserialize tinychange at {}",
+                    file.path().display()
+                )
+            })?;
+            to_delete.push(file.path());
+            all_changes.push(change);
+        }
+
+        if all_changes.is_empty() {
+            opts.println("No tinychanges found, nothing to do");
+            return Ok(());
+        }
+
+        if !opts.changelog_file().exists() {
             opts.println("No changelog file found, creating a new one");
-            let (content, to_delete) = format_changesets(&opts, None)?;
+            let content = format_changesets(&opts, all_changes, None)?;
             let content = format!("# Changelog\n\n## [Unreleased]\n{}", content);
             fs_err::write(opts.changelog_file(), content).into_diagnostic()?;
-            to_delete
         } else {
             let old_content = fs_err::read_to_string(opts.changelog_file()).into_diagnostic()?;
 
             let mut lines = old_content.lines().map(Cow::Borrowed).collect::<Vec<_>>();
 
-            let to_delete = if let Some(unreleased_section) = find_section(
+            if let Some(unreleased_section) = find_section(
                 &lines,
                 0..lines.len(),
                 false,
@@ -52,7 +85,7 @@ impl MergeArgs {
                     }
                 }
 
-                let (content, to_delete) = format_changesets(&opts, Some(existing_sections))?;
+                let content = format_changesets(&opts, all_changes, Some(existing_sections))?;
 
                 // discard the full unreleased section except for the header
                 let before = &lines[..=unreleased_section.start];
@@ -64,34 +97,32 @@ impl MergeArgs {
                     .chain([Cow::Owned(content)])
                     .chain(after.iter().cloned())
                     .collect();
-
-                to_delete
             } else if let Some(changelog_section) = find_section(
                 &lines,
                 0..lines.len(),
                 true,
                 &regex_for_section("changelog"),
             ) {
+                let content = format_changesets(&opts, all_changes, None)?;
                 opts.println(
                     "No unreleased section found, creating a new one under the changelog section",
                 );
-                let (content, to_delete) = format_changesets(&opts, None)?;
 
                 let place = changelog_section.end;
 
                 lines.insert(place, Cow::Owned(content));
                 lines.insert(place, "\n## [Unreleased]".into());
-                to_delete
             } else {
                 bail!("No unreleased or changelog section found in changelog file")
             };
 
             fs_err::write(opts.changelog_file(), lines.join("\n")).into_diagnostic()?;
-            to_delete
         };
 
-        for file in to_delete {
-            fs_err::remove_file(file).into_diagnostic()?;
+        if !self.keep {
+            for file in to_delete {
+                fs_err::remove_file(file).into_diagnostic()?;
+            }
         }
 
         Ok(())
@@ -133,35 +164,9 @@ fn find_section(
 
 fn format_changesets(
     opts: &CommandOpts,
+    all_changes: Vec<TinyChange>,
     existing_sections: Option<Vec<Option<String>>>,
-) -> miette::Result<(String, Vec<PathBuf>)> {
-    let mut all_changes = vec![];
-
-    let mut to_delete = vec![];
-    for file in fs_err::read_dir(opts.tinychanges_dir()).into_diagnostic()? {
-        let file = file.into_diagnostic()?;
-        if file.path().is_dir() {
-            bail!(
-                "Unexpected directory found in tinychanges directory: {:?}",
-                file.path()
-            );
-        }
-
-        if file.path().extension() != Some("md".as_ref()) {
-            continue;
-        }
-
-        let content = fs_err::read_to_string(file.path()).into_diagnostic()?;
-        let change = TinyChange::deserialize(opts, content).with_context(|| {
-            format!(
-                "Failed to deserialize tinychange at {}",
-                file.path().display()
-            )
-        })?;
-        to_delete.push(file.path());
-        all_changes.push(change);
-    }
-
+) -> miette::Result<String> {
     opts.println(&format!("Merging {} changesets", all_changes.len()));
 
     let mut builder = String::new();
@@ -192,5 +197,5 @@ fn format_changesets(
         }
     }
 
-    Ok((builder, to_delete))
+    Ok(builder)
 }
