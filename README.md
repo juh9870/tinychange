@@ -1,4 +1,4 @@
-# Tinychange [![Crates.io](https://img.shields.io/crates/v/tinychange)](https://crates.io/crates/tinychange) [![Crates.io](https://img.shields.io/crates/d/tinychange)](https://crates.io/crates/cargo-limit)
+# Tinychange [![Crates.io](https://img.shields.io/crates/v/tinychange)](https://crates.io/crates/tinychange) [![npm](https://img.shields.io/npm/v/tinychange)](https://www.npmjs.com/package/tinychange) [![Docs.rs](https://img.shields.io/docsrs/tinychange)](https://docs.rs/tinychange) [![Crates.io](https://img.shields.io/crates/d/tinychange)](https://crates.io/crates/cargo-limit) 
 
 ## Description
 
@@ -14,19 +14,27 @@ A tool for creating tiny changelogs on a fly. Create a tinychange file for every
 
 ### From crates.io
 ```sh
-cargo install --locked tinychange
+$ cargo install --locked tinychange
+```
+
+### From NPM
+```sh
+$ npm install -g tinychange
 ```
 
 ### From git
+```sh
+$ cargo install --locked --force --git https://github.com/juh9870/tinychange
 ```
-cargo install --locked --force --git https://github.com/juh9870/tinychange
-```
+
+### From Releases page
+Download the binary from the [Releases page](https://github.com/juh9870/tinychange/releases/latest)
 
 ### As a library
 tinychange can also be invoked from a Rust program, for example, as a part of your [cargo xtask](https://github.com/matklad/cargo-xtask)
 
 ```sh
-cargo add tinychange
+$ cargo add tinychange
 ```
 
 See the [tinychange.rs](src/bin/tinychange.rs) file for an example of how to invoke the library.
@@ -56,7 +64,7 @@ $ tinychange
 You can also manually provide arguments to create a tinychange by using the `new` subcommand. This is useful for automation or scripting. Use the `-I` flag to disable the interactive prompts and silence the output.
 
 ```sh
-tinychange new --kind Added --message "A changelog" --author juh9870
+$ tinychange new --kind Added --message "A changelog" --author juh9870
 ```
 
 ### Merge tinychanges
