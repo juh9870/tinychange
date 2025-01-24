@@ -4,6 +4,8 @@
 
 ## [Unreleased] - ReleaseDate
 
+## [0.3.1] - 2025-01-24
+
 ### Changed
 
 - Updated README.md (by juh9870)
@@ -47,7 +49,8 @@
 - Better message prompt message (by juh9870)
 
 <!-- next-url -->
-[Unreleased]: https://github.com/juh9870/tinychange/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/juh9870/tinychange/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/juh9870/tinychange/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/juh9870/tinychange/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/juh9870/tinychange/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/juh9870/tinychange/tree/v0.1.0
