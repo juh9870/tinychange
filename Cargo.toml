@@ -37,6 +37,11 @@ opt-level = 1
 [profile.dev.package."*"]
 opt-level = 3
 
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
+
 [dev-dependencies]
 dircpy = "0.3.19"
 insta = { version = "1.42.0", features = ["glob"] }

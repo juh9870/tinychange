@@ -25,6 +25,7 @@ in mkShell.override {
     pkgs.cargo-audit
     pkgs.cargo-expand
     pkgs.cargo-release
+    pkgs.cargo-dist
     pkgs.simple-http-server
     pkgs.pre-commit
   ];
