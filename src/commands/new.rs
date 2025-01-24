@@ -6,10 +6,13 @@ use std::path::Path;
 
 #[derive(Debug, Default, Clone, Args)]
 pub struct NewArgs {
+    /// The kind of change (must be one of the categories from the configuration)
     #[arg(short, long)]
     kind: Option<String>,
+    /// The message describing the change
     #[arg(short, long)]
     message: Option<String>,
+    /// The author of the change (defaults to the git author if not provided)
     #[arg(short, long)]
     author: Option<String>,
 }
@@ -51,9 +54,7 @@ impl NewArgs {
             } else {
                 "Describe the change".to_string()
             };
-            inquire::Text::new(&prompt)
-                .prompt()
-                .into_diagnostic()?
+            inquire::Text::new(&prompt).prompt().into_diagnostic()?
         } else {
             bail!("No message provided")
         };

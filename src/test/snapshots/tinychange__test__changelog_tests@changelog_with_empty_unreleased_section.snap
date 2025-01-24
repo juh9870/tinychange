@@ -1,0 +1,30 @@
+---
+source: src/test/mod.rs
+expression: text
+input_file: src/test/cases/changelog_with_empty_unreleased_section
+---
+Changelog
+---
+# [Changelog]
+
+Some description
+- A
+- B
+- C
+
+## [Unreleased]
+
+### Added
+
+- Added test runner (by test_runner)
+
+### Changed
+
+- Renamed test runner (by test_runner)
+
+## [1.0.0] - 2020-01-01
+
+### Added
+- A
+- B
+- C

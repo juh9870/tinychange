@@ -8,6 +8,7 @@ use std::ops::Range;
 
 #[derive(Debug, Default, Clone, Args)]
 pub struct MergeArgs {
+    /// Do not delete tinychange files after merging them into the changelog
     #[arg(short, long)]
     keep: bool,
 }
@@ -112,6 +113,9 @@ impl MergeArgs {
 
                 lines.insert(place, Cow::Owned(content));
                 lines.insert(place, "\n## [Unreleased]".into());
+                if place > 0 && lines[place - 1].trim().is_empty() {
+                    lines.remove(place - 1);
+                }
             } else {
                 bail!("No unreleased or changelog section found in changelog file")
             };

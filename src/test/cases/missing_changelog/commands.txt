@@ -1,0 +1,4 @@
+tinychange init
+tinychange -I new -a test_runner -k "Added" -m "Added test runner"
+tinychange -I new -a test_runner -k "Changed" -m "Renamed test runner"
+tinychange merge

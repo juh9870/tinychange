@@ -36,3 +36,10 @@ opt-level = 1
 # Enable high optimizations for dependencies, but not for our code:
 [profile.dev.package."*"]
 opt-level = 3
+
+[dev-dependencies]
+dircpy = "0.3.19"
+insta = { version = "1.42.0", features = ["glob"] }
+shell-words = "1.1.0"
+strip-ansi-escapes = "0.2.1"
+temp-dir = "0.1.14"

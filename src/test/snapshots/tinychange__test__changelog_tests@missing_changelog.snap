@@ -1,0 +1,18 @@
+---
+source: src/test/mod.rs
+expression: text
+input_file: src/test/cases/missing_changelog
+---
+Changelog
+---
+# Changelog
+
+## [Unreleased]
+
+### Added
+
+- Added test runner (by test_runner)
+
+### Changed
+
+- Renamed test runner (by test_runner)

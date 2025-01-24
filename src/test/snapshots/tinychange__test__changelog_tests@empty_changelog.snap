@@ -1,0 +1,11 @@
+---
+source: src/test/mod.rs
+expression: text
+input_file: src/test/cases/empty_changelog
+---
+Error
+---
+
+  × Failed to execute command #3: tinychange merge
+  ├─▶ Failed to run tinychange
+  ╰─▶ No unreleased or changelog section found in changelog file

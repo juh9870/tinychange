@@ -11,7 +11,15 @@ mod config;
 mod naming;
 mod tinychange;
 
+#[cfg(test)]
+mod test;
+
 #[derive(Debug, Parser)]
+#[command(
+    version,
+    propagate_version = true,
+    about = "A tool for creating tiny changelogs on a fly!"
+)]
 pub struct TinyChangeArgs {
     /// Disable all interactive prompts
     #[arg(short = 'I', long)]
@@ -24,8 +32,11 @@ pub struct TinyChangeArgs {
 
 #[derive(Debug, Clone, Subcommand)]
 enum TinyChangeSubcommand {
+    /// Create a new tinychange file
     New(NewArgs),
+    /// Merge all tinychanges into the changelog
     Merge(MergeArgs),
+    /// Initialize tinychange configuration in the project
     Init,
 }
 
