@@ -4,6 +4,10 @@
 
 ## [Unreleased] - ReleaseDate
 
+### Changed
+
+- Updated README.md (by juh9870)
+
 ## [0.3.0] - 2025-01-24
 
 ### Added
