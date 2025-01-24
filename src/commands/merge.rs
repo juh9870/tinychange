@@ -71,6 +71,7 @@ impl MergeArgs {
             ) {
                 opts.println("Found unreleased section, merging changes into it");
                 let mut existing_sections = vec![];
+                let mut existing_section_ranges = vec![];
                 for category in opts.categories() {
                     if let Some(section) = find_section(
                         &lines,
@@ -78,6 +79,7 @@ impl MergeArgs {
                         false,
                         &regex_for_section(category),
                     ) {
+                        existing_section_ranges.push(section.clone());
                         // skip the first line, which is the section header
                         existing_sections
                             .push(Some(lines[(section.start + 1)..section.end].join("\n")));
@@ -86,11 +88,43 @@ impl MergeArgs {
                     }
                 }
 
+                let earliest_section_start = existing_section_ranges
+                    .iter()
+                    .map(|r| r.start)
+                    .min()
+                    .unwrap_or_else(|| unreleased_section.start + 1);
+                let latest_section_end = existing_section_ranges
+                    .iter()
+                    .map(|r| r.end)
+                    .max()
+                    .unwrap_or(unreleased_section.end);
+
+                if !existing_section_ranges.is_empty() {
+                    #[allow(clippy::needless_range_loop)]
+                    for idx in earliest_section_start..latest_section_end {
+                        if lines[idx].trim().is_empty() {
+                            continue;
+                        }
+
+                        if !existing_section_ranges
+                            .iter()
+                            .any(|range| range.contains(&idx))
+                        {
+                            bail!("Unexpected content or unknown category in unreleased section at line {}: {}", idx + 1, lines[idx]);
+                        }
+                    }
+                }
+
                 let content = format_changesets(&opts, all_changes, Some(existing_sections))?;
 
+                let mut cutoff_start = earliest_section_start;
+                while cutoff_start > 0 && lines[cutoff_start - 1].trim().is_empty() {
+                    cutoff_start -= 1;
+                }
+
                 // discard the full unreleased section except for the header
-                let before = &lines[..=unreleased_section.start];
-                let after = &lines[unreleased_section.end..];
+                let before = &lines[..cutoff_start];
+                let after = &lines[latest_section_end..];
 
                 lines = before
                     .iter()

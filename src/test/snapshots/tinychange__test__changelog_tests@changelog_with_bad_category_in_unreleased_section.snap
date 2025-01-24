@@ -1,0 +1,11 @@
+---
+source: src/test/mod.rs
+expression: text
+input_file: src/test/cases/changelog_with_bad_category_in_unreleased_section
+---
+Error
+---
+
+  × Failed to execute command #3: tinychange merge
+  ├─▶ Failed to run tinychange
+  ╰─▶ Unexpected content or unknown category in unreleased section at line 18: ### Documented
