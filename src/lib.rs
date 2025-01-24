@@ -6,10 +6,10 @@ use miette::{Context, Diagnostic, IntoDiagnostic};
 use std::path::PathBuf;
 use thiserror::Error;
 
-pub mod commands;
-pub mod config;
-pub mod naming;
-pub mod tinychange;
+mod commands;
+mod config;
+mod naming;
+mod tinychange;
 
 #[derive(Debug, Parser)]
 pub struct TinyChangeArgs {
