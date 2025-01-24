@@ -1,4 +1,4 @@
-# Tinychange [![Crates.io](https://img.shields.io/crates/v/tinychange)](https://crates.io/crates/tinychange) [![npm](https://img.shields.io/npm/v/tinychange)](https://www.npmjs.com/package/tinychange) [![Docs.rs](https://img.shields.io/docsrs/tinychange)](https://docs.rs/tinychange) [![Crates.io](https://img.shields.io/crates/d/tinychange)](https://crates.io/crates/cargo-limit) 
+# Tinychange [![Crates.io](https://img.shields.io/crates/v/tinychange)](https://crates.io/crates/tinychange) [![npm](https://img.shields.io/npm/v/tinychange)](https://www.npmjs.com/package/tinychange) [![Docs.rs](https://img.shields.io/docsrs/tinychange)](https://docs.rs/tinychange) [![Crates.io](https://img.shields.io/crates/d/tinychange)](https://crates.io/crates/tinychange) 
 
 ## Description
 
