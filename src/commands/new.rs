@@ -2,6 +2,7 @@ use crate::config::CommandOpts;
 use crate::tinychange::TinyChange;
 use clap::Args;
 use miette::{bail, Context, IntoDiagnostic};
+use std::ffi::OsStr;
 use std::path::Path;
 
 #[derive(Debug, Default, Clone, Args)]
@@ -21,8 +22,7 @@ impl NewArgs {
     pub fn run(self, opts: CommandOpts) -> miette::Result<()> {
         let author = if let Some(author) = self.author {
             author
-        } else if let Some(name) = find_author(opts.workdir())? {
-            opts.println(&format!("Found author from git config: {}", name));
+        } else if let Some(name) = find_author(&opts)? {
             name
         } else if opts.interactive() {
             inquire::Text::new("Who is the author of this change?")
@@ -83,12 +83,53 @@ impl NewArgs {
     }
 }
 
-fn find_author(workdir: &Path) -> miette::Result<Option<String>> {
-    if let Ok(repo) = gix::discover(workdir) {
-        if let Some(author) = repo.author().transpose().into_diagnostic()? {
-            return Ok(Some(author.name.to_string()));
+fn find_author(opts: &CommandOpts) -> miette::Result<Option<String>> {
+    fn run_cmd<I: IntoIterator<Item = S>, S: AsRef<OsStr>>(
+        workdir: &Path,
+        cmd: &str,
+        args: I,
+    ) -> Option<String> {
+        let out = std::process::Command::new(cmd)
+            .args(args)
+            .current_dir(workdir)
+            .output()
+            .ok()?;
+
+        if out.status.success() {
+            String::from_utf8(out.stdout)
+                .ok()
+                .map(|x| x.trim().to_owned())
+                .filter(|x| !x.is_empty())
+        } else {
+            None
         }
     }
 
-    Ok(None)
+    let name = if let Some(author) = run_cmd(opts.workdir(), "git", ["config", "author.name"]) {
+        opts.println(&format!(
+            "Found author from git author.name config: {}",
+            author
+        ));
+        Some(author)
+    } else if let Some(author) = std::env::var("GIT_AUTHOR_NAME")
+        .ok()
+        .map(|x| x.trim().to_owned())
+        .filter(|x| !x.is_empty())
+    {
+        opts.println(&format!(
+            "Found author from GIT_AUTHOR_NAME environment variable: {}",
+            author
+        ));
+        Some(author)
+    } else if let Some(author) = run_cmd(opts.workdir(), "git", ["config", "user.name"]) {
+        opts.println(&format!(
+            "Found author from git user.name config: {}",
+            author
+        ));
+        Some(author)
+    } else {
+        None
+    };
+
+    Ok(name)
 }

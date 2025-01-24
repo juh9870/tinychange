@@ -12,7 +12,6 @@ readme = "README.md"
 clap = { version = "4.5.27", features = ["derive"] }
 fake = "3.0.1"
 fs-err = "3.1.0"
-gix = "0.70.0"
 inquire = "0.7.5"
 miette = { version = "7.4.0", features = ["fancy", "derive"] }
 normalize-line-endings = "0.3.0"

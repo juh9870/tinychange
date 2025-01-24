@@ -49,6 +49,8 @@ To create a new tinychange, use just run the `tinychange` command. This will sho
 $ tinychange
 ```
 
+> Author name will be pulled from the active git author/user, if available. If not, you will be prompted for it.
+
 #### Script usage
 
 You can also manually provide arguments to create a tinychange by using the `new` subcommand. This is useful for automation or scripting. Use the `-I` flag to disable the interactive prompts and silence the output.
