@@ -4,10 +4,12 @@
 
 ## [Unreleased] - ReleaseDate
 
+## [0.3.0] - 2025-01-24
+
 ### Added
 
 - Cargo dist for building binaries and NPM release (by juh9870)
-- Checks to ensure that CLI doesn't override unexpected parts of the Unreleased section (by juh9870)
+- Checks to ensure that CLI doesn't override unexpected parts of the 0.3.0 section (by juh9870)
 - CLI version number (by juh9870)
 - Better CLI help messages (by juh9870)
 - License files (by juh9870)
@@ -41,6 +43,7 @@
 - Better message prompt message (by juh9870)
 
 <!-- next-url -->
-[Unreleased]: https://github.com/juh9870/tinychange/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/juh9870/tinychange/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/juh9870/tinychange/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/juh9870/tinychange/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/juh9870/tinychange/tree/v0.1.0
