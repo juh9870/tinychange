@@ -4,6 +4,20 @@
 
 ## [Unreleased] - ReleaseDate
 
+### Added
+
+- Cargo dist for building binaries and NPM release (by juh9870)
+- Checks to ensure that CLI doesn't override unexpected parts of the Unreleased section (by juh9870)
+- CLI version number (by juh9870)
+- Better CLI help messages (by juh9870)
+- License files (by juh9870)
+- Initial sanity check tests (by juh9870)
+
+### Changed
+
+- Avoid adding unnecessary whitespace when inserting unreleased section (by juh9870)
+- Fetch git username by running `git` commands, instead of pulling gix package (by juh9870)
+
 ## [0.2.0] - 2025-01-24
 
 ### Added
