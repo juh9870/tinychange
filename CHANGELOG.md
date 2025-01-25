@@ -4,6 +4,10 @@
 
 ## [Unreleased] - ReleaseDate
 
+### Fixed
+
+- Destroying of description of unreleased sections without categories in them (by juh9870)
+
 ## [0.3.1] - 2025-01-24
 
 ### Changed
