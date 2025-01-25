@@ -1,7 +1,7 @@
 ---
 source: src/test/mod.rs
 expression: text
-input_file: src/test/cases/changelog_with_empty_unreleased_section_with_descriptions
+input_file: src/test/cases/changelog_with_empty_unreleased_section_with_tight_descriptions
 ---
 Changelog
 ---
@@ -14,7 +14,6 @@ Some description
 
 ## [Unreleased]
 Some extra data
-
 - lists too
 - and more
 

@@ -92,7 +92,7 @@ impl MergeArgs {
                     .iter()
                     .map(|r| r.start)
                     .min()
-                    .unwrap_or_else(|| unreleased_section.start + 1);
+                    .unwrap_or(unreleased_section.end);
                 let latest_section_end = existing_section_ranges
                     .iter()
                     .map(|r| r.end)
